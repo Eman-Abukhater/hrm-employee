@@ -6,6 +6,8 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { SessionProvider } from 'next-auth/react';
+
 // Importing global styles
 const theme = createTheme({
   palette: {
@@ -19,11 +21,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
+        <SessionProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {children}
           <ToastContainer />
         </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );
