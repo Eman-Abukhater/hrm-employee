@@ -1,4 +1,3 @@
-// app/api/auth/[...nextauth]/route.ts
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextAuthOptions } from 'next-auth';
@@ -12,7 +11,6 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
-        // ✅ TODO: Replace this with real DB logic
         if (
           credentials?.email === 'admin@hrm.com' &&
           credentials?.password === 'admin123'
