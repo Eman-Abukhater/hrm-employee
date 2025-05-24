@@ -21,14 +21,15 @@ export default function EmployeeListPage() {
 
   const filteredData = data?.filter((emp) => {
     const matchesSearch =
-      emp.name.toLowerCase().includes(search.toLowerCase()) ||
-      emp.designation.toLowerCase().includes(search.toLowerCase());
+  emp.fullName.toLowerCase().includes(search.toLowerCase()) ||
+  emp.designation.toLowerCase().includes(search.toLowerCase());
+
     const matchesDepartment = department ? emp.department === department : true;
     return matchesSearch && matchesDepartment;
   });
 
   const columns = [
-    { field: 'name', headerName: 'Name', flex: 1 },
+    { field: 'fullName', headerName: 'Name', flex: 1 },
     { field: 'designation', headerName: 'Designation', flex: 1 },
     { field: 'department', headerName: 'Department', flex: 1 },
     {
@@ -49,7 +50,7 @@ export default function EmployeeListPage() {
       renderCell: () => <Chip label="Edit" color="primary" />,
     },
   ];
-
+  
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom>

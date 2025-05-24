@@ -6,7 +6,7 @@ export const departments = [
     "Finance",
   ];
   
-  export const roles = [
+  export const Designation = [
     "Admin",
     "HR",
     "Manager",

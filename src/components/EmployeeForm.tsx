@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { roles, departments } from "@/lib/departments";
+import { Designation, departments } from "@/lib/departments";
 import { useState } from "react";
 import { useUploadImage } from "@/hooks/useUploadImage"; //Import custom hook
 
@@ -115,13 +115,13 @@ export default function EmployeeForm({
         <Grid item xs={12} md={6}>
           <TextField
             select
-            label="Role"
+            label="Designation"
             fullWidth
-            {...register("role")}
-            error={!!errors.role}
-            helperText={errors.role?.message}
+            {...register("designation")}
+            error={!!errors.designation}
+            helperText={errors.designation?.message}
           >
-            {roles.map((role) => (
+            {Designation.map((role) => (
               <MenuItem key={role} value={role}>
                 {role}
               </MenuItem>

@@ -8,7 +8,7 @@ export const employeeSchema = z.object({
     .min(10, "Phone must be at least 10 digits")
     .max(15, "Phone must be under 15 digits"),
   department: z.string().min(1, "Department is required"),
-  role: z.string().min(1, "Role is required"),
+  designation: z.string().min(1, "Designation is required"),
   joinDate: z.string().min(1, "Join Date is required"),
   status: z.enum(["active", "inactive"]),
   profilePhoto: z.string().url().optional(), // Will store Cloudinary URL

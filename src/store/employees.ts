@@ -9,45 +9,33 @@ type EmployeesState = {
   getEmployeeById: (id: string) => Employee | undefined;
 };
 
+const LOCAL_KEY = 'employee_data';
+
+const loadInitialEmployees = (): Employee[] => {
+  if (typeof window === 'undefined') return [];
+  const stored = localStorage.getItem(LOCAL_KEY);
+  return stored ? JSON.parse(stored) : [];
+};
+
 export const useEmployeesStore = create<EmployeesState>((set, get) => ({
-  employees: [
-    {
-      id: '1',
-      fullName: 'John Doe',
-      designation: 'Frontend Developer',
-      email: 'john@example.com',
-      phone: '1234567890',
-      department: 'Engineering',
-      role: 'Employee',
-      joinDate: '2023-01-01',
-      status: 'active',
-      profilePhoto: '',
-    },
-    {
-      id: '2',
-      fullName: 'Jane Smith',
-      designation: 'HR Manager',
-      email: 'jane@example.com',
-      phone: '9876543210',
-      department: 'Human Resources',
-      role: 'HR',
-      joinDate: '2022-06-15',
-      status: 'inactive',
-      profilePhoto: '',
-    },
-  ],
+  employees: loadInitialEmployees(),
 
-  addEmployee: (data) =>
-    set((state) => ({
-      employees: [...state.employees, { ...data, id: uuidv4() }],
-    })),
+  addEmployee: (data) => {
+    const newEmployee = { ...data, id: uuidv4() };
+    console.log("ADDING EMPLOYEE:", newEmployee); // ✅ Add this
+    const updated = [...get().employees, newEmployee];
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
+    set({ employees: updated });
+  },
+  
 
-  updateEmployee: (id, updatedData) =>
-    set((state) => ({
-      employees: state.employees.map((emp) =>
-        emp.id === id ? { ...emp, ...updatedData } : emp
-      ),
-    })),
+  updateEmployee: (id, updatedData) => {
+    const updated = get().employees.map((emp) =>
+      emp.id === id ? { ...emp, ...updatedData } : emp
+    );
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
+    set({ employees: updated });
+  },
 
   getEmployeeById: (id) => get().employees.find((emp) => emp.id === id),
 }));
