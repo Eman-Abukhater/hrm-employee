@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { employeeSchema } from "@/lib/zodSchemas";
-import { Employee } from "@/types/employee";
 import { z } from "zod";
 import {
   Box,
@@ -15,6 +14,7 @@ import {
 } from "@mui/material";
 import { roles, departments } from "@/lib/departments";
 import { useState } from "react";
+import { useUploadImage } from "@/hooks/useUploadImage"; //Import custom hook
 
 type FormData = z.infer<typeof employeeSchema>;
 
@@ -40,15 +40,21 @@ export default function EmployeeForm({
   });
 
   const [preview, setPreview] = useState(defaultValues?.profilePhoto || "");
+  const { uploadImage, isUploading } = useUploadImage(); //  use hook
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
-      reader.readAsDataURL(file);
-      // We'll use the real upload in next step
-      setValue("profilePhoto", "TEMP_URL_TO_BE_REPLACED");
+    if (!file) return;
+
+    // Local preview
+    const reader = new FileReader();
+    reader.onloadend = () => setPreview(reader.result as string);
+    reader.readAsDataURL(file);
+
+    // Upload to Cloudinary
+    const imageUrl = await uploadImage(file);
+    if (imageUrl) {
+      setValue("profilePhoto", imageUrl); // 👈 Set the real URL
     }
   };
 
@@ -150,8 +156,13 @@ export default function EmployeeForm({
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Button variant="outlined" component="label" fullWidth>
-            Upload Photo
+          <Button
+            variant="outlined"
+            component="label"
+            fullWidth
+            disabled={isUploading}
+          >
+            {isUploading ? "Uploading..." : "Upload Photo"}
             <input
               type="file"
               accept="image/*"
