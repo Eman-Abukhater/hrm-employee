@@ -1,8 +1,10 @@
+// src/app/api/auth/[...nextauth]/route.ts
+
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextAuthOptions } from 'next-auth';
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -55,22 +57,21 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role;
-        token.id = user.id; // 👈 include user ID
+        token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
       session.user.role = token.role;
-      session.user.id = token.id; // 👈 pass user ID to session
+      session.user.id = token.id;
       return session;
     }
   },
-  
   session: {
     strategy: 'jwt'
   },
   secret: process.env.NEXTAUTH_SECRET
 };
-
+//  Only export handler functions, not authOptions
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
