@@ -10,19 +10,43 @@ import {
   FormControl,
   Chip,
   CircularProgress,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { Visibility, Edit, Delete } from '@mui/icons-material';
 import { useEmployees } from '@/hooks/useEmployees';
 import { useEmployeeFilterStore } from '@/store/employeeFilterStore';
+import { useAuthStore } from '@/store/authStore';
 
 export default function EmployeeListPage() {
   const { data, isLoading } = useEmployees();
   const { search, department, setSearch, setDepartment } = useEmployeeFilterStore();
+  const role = useAuthStore((state) => state.role);
+
+  // === Handler functions ===
+  const handleView = (employee: any) => {
+    console.log('View', employee);
+    // You can navigate to a detail page here
+  };
+
+  const handleEdit = (employee: any) => {
+    console.log('Edit', employee);
+    // Open a modal or navigate to an edit form
+  };
+
+  const handleDelete = (employee: any) => {
+    const confirmed = window.confirm(`Are you sure you want to delete ${employee.fullName}?`);
+    if (confirmed) {
+      console.log('Delete', employee);
+      // Implement delete logic here
+    }
+  };
 
   const filteredData = data?.filter((emp) => {
     const matchesSearch =
-  emp.fullName.toLowerCase().includes(search.toLowerCase()) ||
-  emp.designation.toLowerCase().includes(search.toLowerCase());
+      emp.fullName.toLowerCase().includes(search.toLowerCase()) ||
+      emp.designation.toLowerCase().includes(search.toLowerCase());
 
     const matchesDepartment = department ? emp.department === department : true;
     return matchesSearch && matchesDepartment;
@@ -47,10 +71,38 @@ export default function EmployeeListPage() {
       field: 'actions',
       headerName: 'Actions',
       flex: 1,
-      renderCell: () => <Chip label="Edit" color="primary" />,
+      sortable: false,
+      renderCell: (params: any) => (
+        <Box display="flex" gap={1}>
+          {/* View Button - Everyone */}
+          <Tooltip title="View">
+            <IconButton color="primary" onClick={() => handleView(params.row)}>
+              <Visibility />
+            </IconButton>
+          </Tooltip>
+
+          {/* Edit Button - Admin and HR */}
+          {(role === 'admin' || role === 'hr') && (
+            <Tooltip title="Edit">
+              <IconButton color="info" onClick={() => handleEdit(params.row)}>
+                <Edit />
+              </IconButton>
+            </Tooltip>
+          )}
+
+          {/* Delete Button - Admin only */}
+          {role === 'admin' && (
+            <Tooltip title="Delete">
+              <IconButton color="error" onClick={() => handleDelete(params.row)}>
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Box>
+      ),
     },
   ];
-  
+
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom>
