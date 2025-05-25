@@ -43,8 +43,8 @@ export default function DashboardPage() {
         <>
           <Typography variant="h4" gutterBottom>Welcome, Employee! 👷‍♀️</Typography>
           <Stack spacing={2} mt={2}>
-            <Link href={`/employees/${userId}`}>
-              <Button variant="contained">View My Profile</Button>
+          <Link href={`/dashboard/employees/${userId}`}>
+          <Button variant="contained">View My Profile</Button>
             </Link>
           </Stack>
         </>
