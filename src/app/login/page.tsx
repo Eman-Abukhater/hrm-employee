@@ -26,6 +26,7 @@ export default function LoginPage() {
   const { register, handleSubmit } = useForm<FormValues>();
   const [error, setError] = useState('');
   const setRole = useAuthStore((state) => state.setRole);
+  const setUserId = useAuthStore((state) => state.setUserId);
 
   const onSubmit = async (data: FormValues) => {
     setError('');
@@ -41,6 +42,10 @@ export default function LoginPage() {
       const session = await sessionRes.json();
       const userRole = session?.user?.role;
       setRole(userRole); // Save to Zustand
+      const userId = session?.user?.id;
+      setRole(userRole);
+      setUserId(userId);
+
       router.push('/dashboard'); // Redirect after login
     } else {
       setError('Invalid credentials');

@@ -18,12 +18,25 @@ import { Visibility, Edit, Delete } from '@mui/icons-material';
 import { useEmployees } from '@/hooks/useEmployees';
 import { useEmployeeFilterStore } from '@/store/employeeFilterStore';
 import { useAuthStore } from '@/store/authStore';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function EmployeeListPage() {
   const { data, isLoading } = useEmployees();
   const { search, department, setSearch, setDepartment } = useEmployeeFilterStore();
   const role = useAuthStore((state) => state.role);
+  const router = useRouter();
+  
+  useEffect(() => {
+    if (role !== 'admin' && role !== 'hr') {
+      router.push('/login');
+    }
+  }, [role, router])
 
+  if (role !== 'admin' && role !== 'hr') {
+    router.push('/login'); 
+  }
+  
   // === Handler functions ===
   const handleView = (employee: any) => {
     console.log('View', employee);

@@ -18,10 +18,10 @@ export default function DashboardPage() {
         <>
           <Typography variant="h4" gutterBottom>Welcome, Admin! 👑</Typography>
           <Stack spacing={2} mt={2}>
-            <Link href="/employees">
+            <Link href="/dashboard/employees">
               <Button variant="contained">Employee List</Button>
             </Link>
-            <Link href="/employees/add">
+            <Link href="/dasboard/employees/add">
               <Button variant="outlined">Add New Employee</Button>
             </Link>
           </Stack>
@@ -32,8 +32,8 @@ export default function DashboardPage() {
         <>
           <Typography variant="h4" gutterBottom>Welcome, HR Manager! 📋</Typography>
           <Stack spacing={2} mt={2}>
-            <Link href="/employees">
-              <Button variant="contained">Employee List</Button>
+          <Link href="/dashboard/employees">
+          <Button variant="contained">Employee List</Button>
             </Link>
           </Stack>
         </>
