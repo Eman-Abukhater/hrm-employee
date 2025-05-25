@@ -59,6 +59,8 @@ export default function EmployeeListPage() {
     },
     onError: () => {
       toast.error("Failed to delete employee");
+      console.error("Update error:", error);
+
     },
   });
   const handleDelete = (employee: any) => {
