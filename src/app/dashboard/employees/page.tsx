@@ -18,7 +18,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import { Visibility, Edit, Delete } from "@mui/icons-material";
 import { useEmployees } from "@/hooks/useEmployees";
 import { useEmployeeFilterStore } from "@/store/employeeFilterStore";
@@ -29,6 +29,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteEmployee } from "@/lib/api/employees";
 import { toast } from "react-toastify";
 import { updateEmployee } from "@/lib/api/employees";
+import { Employee } from "@/types/employee";
 
 export default function EmployeeListPage() {
   const { data, isLoading } = useEmployees();
@@ -39,7 +40,7 @@ export default function EmployeeListPage() {
   const queryClient = useQueryClient();
   const [viewOpen, setViewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const updateMutation = useMutation({
     mutationFn: updateEmployee,
     onSuccess: () => {
@@ -59,12 +60,11 @@ export default function EmployeeListPage() {
     },
     onError: () => {
       toast.error("Failed to delete employee");
-      console.error("Update error:", error);
 
     },
   });
-  const handleDelete = (employee: any) => {
-    deleteMutation.mutate(employee.id);
+  const handleDelete = (employee: Employee) => {
+    deleteMutation.mutate(employee.id!);
   };
 
   useEffect(() => {
@@ -77,12 +77,12 @@ export default function EmployeeListPage() {
     router.push("/login");
   }
 
-  const handleView = (employee: any) => {
+  const handleView = (employee: Employee) => {
     setSelectedEmployee(employee);
     setViewOpen(true);
   };
 
-  const handleEdit = (employee: any) => {
+  const handleEdit = (employee: Employee) => {
     setSelectedEmployee(employee);
     setEditOpen(true);
   };
@@ -114,7 +114,7 @@ export default function EmployeeListPage() {
       field: "status",
       headerName: "Status",
       flex: 1,
-      renderCell: (params: any) => (
+      renderCell: (params: GridRenderCellParams<Employee>) => (
         <Chip
           label={params.value}
           color={params.value === "active" ? "success" : "default"}
@@ -126,7 +126,7 @@ export default function EmployeeListPage() {
       headerName: "Actions",
       flex: 1,
       sortable: false,
-      renderCell: (params: any) => (
+      renderCell: (params: GridRenderCellParams<Employee>) => (
         <Box display="flex" gap={1}>
           {/* View Button - Everyone */}
           <Tooltip title="View">
