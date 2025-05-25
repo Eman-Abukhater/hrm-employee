@@ -28,6 +28,7 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteEmployee } from "@/lib/api/employees";
 import { toast } from "react-toastify";
+import { updateEmployee } from "@/lib/api/employees";
 
 export default function EmployeeListPage() {
   const { data, isLoading } = useEmployees();
@@ -39,7 +40,17 @@ export default function EmployeeListPage() {
   const [viewOpen, setViewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
-
+  const updateMutation = useMutation({
+    mutationFn: updateEmployee,
+    onSuccess: () => {
+      toast.success("Employee updated successfully");
+      setEditOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
+    onError: () => {
+      toast.error("Failed to update employee");
+    },
+  });
   const deleteMutation = useMutation({
     mutationFn: deleteEmployee,
     onSuccess: () => {
@@ -82,6 +93,16 @@ export default function EmployeeListPage() {
     const matchesDepartment = department ? emp.department === department : true;
     return matchesSearch && matchesDepartment;
   });
+  const handleEditClose = () => {
+    setEditOpen(false);
+    setSelectedEmployee(null);
+  };
+  
+  const handleViewClose = () => {
+    setViewOpen(false);
+    setSelectedEmployee(null);
+  };
+  
 
   const columns = [
     { field: "fullName", headerName: "Name", flex: 1 },
@@ -181,7 +202,7 @@ export default function EmployeeListPage() {
       {/* View Dialog */}
       <Dialog
         open={viewOpen}
-        onClose={() => setViewOpen(false)}
+        onClose={handleViewClose}
         fullWidth
         maxWidth="sm"
       >
@@ -211,7 +232,7 @@ export default function EmployeeListPage() {
 
       <Dialog
         open={editOpen}
-        onClose={() => setEditOpen(false)}
+        onClose={handleEditClose}
         fullWidth
         maxWidth="sm"
       >
@@ -274,7 +295,11 @@ export default function EmployeeListPage() {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => console.log("Save logic here", selectedEmployee)}
+            onClick={() => {
+              if (selectedEmployee) {
+                updateMutation.mutate(selectedEmployee);
+              }
+            }}
           >
             Save
           </Button>
