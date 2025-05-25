@@ -1,26 +1,58 @@
 'use client';
 
-import { Typography } from '@mui/material';
+import { Typography, Box, Button, Stack } from '@mui/material';
+import Link from 'next/link';
 import { useAuthStore } from '@/store/authStore';
 
 export default function DashboardPage() {
   const role = useAuthStore((state) => state.role);
+  const userId = useAuthStore((state) => state.userId); // assuming you store it
 
   if (!role) {
     return <Typography>Loading...</Typography>;
   }
 
-  if (role === 'admin') {
-    return <Typography variant="h4">Welcome, Admin! 👑</Typography>;
-  }
+  return (
+    <Box p={4}>
+      {role === 'admin' && (
+        <>
+          <Typography variant="h4" gutterBottom>Welcome, Admin! 👑</Typography>
+          <Stack spacing={2} mt={2}>
+            <Link href="/employees">
+              <Button variant="contained">Employee List</Button>
+            </Link>
+            <Link href="/employees/add">
+              <Button variant="outlined">Add New Employee</Button>
+            </Link>
+          </Stack>
+        </>
+      )}
 
-  if (role === 'hr') {
-    return <Typography variant="h4">Welcome, HR Manager! 📋</Typography>;
-  }
+      {role === 'hr' && (
+        <>
+          <Typography variant="h4" gutterBottom>Welcome, HR Manager! 📋</Typography>
+          <Stack spacing={2} mt={2}>
+            <Link href="/employees">
+              <Button variant="contained">Employee List</Button>
+            </Link>
+          </Stack>
+        </>
+      )}
 
-  if (role === 'employee') {
-    return <Typography variant="h4">Welcome, Employee! 👷‍♀️</Typography>;
-  }
+      {role === 'employee' && (
+        <>
+          <Typography variant="h4" gutterBottom>Welcome, Employee! 👷‍♀️</Typography>
+          <Stack spacing={2} mt={2}>
+            <Link href={`/employees/${userId}`}>
+              <Button variant="contained">View My Profile</Button>
+            </Link>
+          </Stack>
+        </>
+      )}
 
-  return <Typography variant="h6">Access denied.</Typography>;
+      {!['admin', 'hr', 'employee'].includes(role) && (
+        <Typography variant="h6" color="error">Access denied.</Typography>
+      )}
+    </Box>
+  );
 }
