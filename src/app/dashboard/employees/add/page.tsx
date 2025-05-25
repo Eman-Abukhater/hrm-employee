@@ -26,7 +26,7 @@ export default function AddEmployeePage() {
 
   return (
     <div>
-      <EmployeeForm onSubmit={mutation.mutate} />
-    </div>
+<EmployeeForm onSubmit={(data) => mutation.mutate({ ...data, role: 'employee' })} />
+</div>
   );
 }
