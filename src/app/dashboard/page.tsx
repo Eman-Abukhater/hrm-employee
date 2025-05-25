@@ -3,11 +3,25 @@
 import { Typography, Box, Button, Stack } from "@mui/material";
 import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
-
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 export default function DashboardPage() {
   const role = useAuthStore((state) => state.role);
   const userId = useAuthStore((state) => state.userId); // assuming you store it
-
+  // Mock employee department data
+  const departmentData = [
+    { department: "Engineering", count: 12 },
+    { department: "HR", count: 5 },
+    { department: "Sales", count: 8 },
+    { department: "Marketing", count: 6 },
+  ];
   if (!role) {
     return <Typography>Loading...</Typography>;
   }
@@ -40,6 +54,22 @@ export default function DashboardPage() {
               <Button variant="contained">Employee List</Button>
             </Link>
           </Stack>
+
+          {/*  Chart Section */}
+          <Box mt={4}>
+            <Typography variant="h6" gutterBottom>
+              Employees by Department
+            </Typography>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={departmentData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="department" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="count" fill="#1976d2" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Box>
         </>
       )}
 
