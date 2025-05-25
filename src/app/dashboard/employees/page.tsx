@@ -41,9 +41,7 @@ const deleteMutation = useMutation({
   },
 });
 const handleDelete = (employee: any) => {
-  if (confirm(`Are you sure you want to delete ${employee.fullName}?`)) {
-    deleteMutation.mutate(employee.id);
-  }
+  deleteMutation.mutate(employee.id);
 };
 
   useEffect(() => {
