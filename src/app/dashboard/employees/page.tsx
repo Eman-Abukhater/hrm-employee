@@ -23,7 +23,7 @@ import { Visibility, Edit, Delete } from "@mui/icons-material";
 import { useEmployees } from "@/hooks/useEmployees";
 import { useEmployeeFilterStore } from "@/store/employeeFilterStore";
 import { useAuthStore } from "@/store/authStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteEmployee } from "@/lib/api/employees";
@@ -249,6 +249,23 @@ export default function EmployeeListPage() {
                   })
                 }
               />
+
+              <FormControl fullWidth>
+                <InputLabel>Status</InputLabel>
+                <Select
+                  value={selectedEmployee.status}
+                  label="Status"
+                  onChange={(e) =>
+                    setSelectedEmployee({
+                      ...selectedEmployee,
+                      status: e.target.value,
+                    })
+                  }
+                >
+                  <MenuItem value="active">Active</MenuItem>
+                  <MenuItem value="inactive">Inactive</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
           )}
         </DialogContent>

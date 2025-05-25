@@ -61,3 +61,14 @@ export const deleteEmployee = async (id: string): Promise<void> => {
   const updated = employees.filter((emp: Employee) => emp.id !== id);
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
 };
+export const updateEmployee = async (updatedEmployee) => {
+  const response = await fetch(`/api/employees/${updatedEmployee.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updatedEmployee),
+  });
+
+  if (!response.ok) throw new Error('Failed to update employee');
+
+  return response.json();
+};
