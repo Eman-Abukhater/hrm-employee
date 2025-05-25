@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { employeeSchema } from "@/lib/zodSchemas";
 import { z } from "zod";
+import Image from "next/image";
 import {
   Box,
   Button,
@@ -172,7 +173,7 @@ export default function EmployeeForm({
           </Button>
           {preview && (
             <Box mt={1}>
-              <img src={preview} alt="Preview" width={100} height={100} />
+              <Image src={preview} alt="Preview" width={100} height={100} />
             </Box>
           )}
         </Grid>

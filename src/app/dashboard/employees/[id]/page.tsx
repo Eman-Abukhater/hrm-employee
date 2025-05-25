@@ -22,7 +22,7 @@ export default function EmployeeProfilePage() {
 
   return (
     <Box p={4}>
-      <Typography variant="h4" gutterBottom>{employee.fullName}'s Profile</Typography>
+      <Typography variant="h4" gutterBottom>{employee.fullName} Profile</Typography>
       <Typography variant="subtitle1" color="textSecondary">{employee.designation} - {employee.department}</Typography>
 
       <Tabs value={tabIndex} onChange={(e, newIndex) => setTabIndex(newIndex)} sx={{ mt: 3 }}>
