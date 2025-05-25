@@ -53,3 +53,11 @@ export const createEmployee = async (data: Omit<Employee, 'id'>): Promise<Employ
   return newEmployee;
 };
 
+export const deleteEmployee = async (id: string): Promise<void> => {
+  await new Promise((res) => setTimeout(res, 500));
+  const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+  const employees = stored ? JSON.parse(stored) : [];
+
+  const updated = employees.filter((emp: Employee) => emp.id !== id);
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+};
