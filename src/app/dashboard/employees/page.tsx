@@ -20,13 +20,32 @@ import { useEmployeeFilterStore } from '@/store/employeeFilterStore';
 import { useAuthStore } from '@/store/authStore';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteEmployee } from '@/lib/api/employees';
+import { toast } from 'react-toastify';
 export default function EmployeeListPage() {
   const { data, isLoading } = useEmployees();
   const { search, department, setSearch, setDepartment } = useEmployeeFilterStore();
   const role = useAuthStore((state) => state.role);
   const router = useRouter();
-  
+  const queryClient = useQueryClient();
+
+const deleteMutation = useMutation({
+  mutationFn: deleteEmployee,
+  onSuccess: () => {
+    toast.success('Employee deleted');
+    queryClient.invalidateQueries({ queryKey: ['employees'] });
+  },
+  onError: () => {
+    toast.error('Failed to delete employee');
+  },
+});
+const handleDelete = (employee: any) => {
+  if (confirm(`Are you sure you want to delete ${employee.fullName}?`)) {
+    deleteMutation.mutate(employee.id);
+  }
+};
+
   useEffect(() => {
     if (role !== 'admin' && role !== 'hr') {
       router.push('/login');
@@ -48,13 +67,6 @@ export default function EmployeeListPage() {
     // Open a modal or navigate to an edit form
   };
 
-  const handleDelete = (employee: any) => {
-    const confirmed = window.confirm(`Are you sure you want to delete ${employee.fullName}?`);
-    if (confirmed) {
-      console.log('Delete', employee);
-      // Implement delete logic here
-    }
-  };
 
   const filteredData = data?.filter((emp) => {
     const matchesSearch =
