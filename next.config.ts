@@ -1,8 +1,6 @@
-/** @type {import('next').NextConfig} */
+// next.config.js
 const nextConfig = {
-  output: 'export',
   typescript: {
-    // !! This disables type checking during build !!
     ignoreBuildErrors: true,
   },
 };
